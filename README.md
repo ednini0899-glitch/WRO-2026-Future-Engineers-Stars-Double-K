@@ -431,246 +431,296 @@ This provided a better basis for developing continuous autonomous navigation.
 
 ---
 
-# 13. Test Metrics
+# 13. Test Metrics and Current Configuration
 
-As development continues, test results will be recorded to compare configurations.
+The following information summarizes the current configuration and preliminary testing of the **Stars Double K** autonomous vehicle.
 
-| Test | Parameter | Result |
-|------|-----------|--------|
-| Traction motor | Port A | Operational |
-| Steering motor | Port E | Operational |
-| Steering center | Reference position | Under calibration |
-| Red detection | Port F | Detected |
-| Green detection | Port F | Detected |
-| Distance measurement | Port B | Under testing |
-| Obstacle avoidance | Steering + color | Under development |
-| Lane recovery | Counter-steering | Under development |
-| Complete autonomous run | Full system | Under development |
+The robot is still undergoing calibration. Values identified as experimental correspond to configurations currently used during development and may be adjusted after additional track testing.
 
-Future tests will include repeated attempts so that reliability can be measured instead of relying on a single successful run.
+## 13.1 Current Robot Configuration
 
----
-
-# 14. Risks and Failure Modes
-
-## Steering Mechanical Limit
-
-**Risk:**  
-The steering motor may move beyond the useful range of the mechanical linkage.
-
-**Mitigation:**  
-Increase steering values gradually and verify that the wheels can return to center.
+| Parameter | Current Value | Status |
+|---|---:|---|
+| Traction motor | Port A | Confirmed |
+| Steering motor | Port E | Confirmed |
+| Distance sensor | Port B | Confirmed |
+| Color sensor | Port F | Confirmed |
+| Color detection distance | Approx. 6 cm | Observed |
+| Steering center reference | 0° | Current configuration |
+| Normal driving speed | 200 deg/s | Current software setting |
+| Steering motor speed | 100 deg/s | Current software setting |
+| Right steering reference | -100° | Experimental |
+| Left steering reference | +100° | Experimental |
+| Distance threshold | TBD | Pending track validation |
+| Complete obstacle avoidance | Under development | Pending validation |
+| Complete autonomous navigation | Under development | Pending validation |
 
 ---
 
-## Steering Backlash
+## 13.2 Color Sensor Test
 
-**Risk:**  
-Mechanical play in the steering mechanism may cause the real wheel position to differ slightly from the commanded position.
+The color sensor is connected to **Port F**.
 
-**Mitigation:**  
-Perform repeated center tests and calibrate the useful steering positions.
+During preliminary testing, the sensor was able to recognize the red and green traffic pillar colors at an approximate distance of **6 cm**.
 
----
+This distance is currently used as a practical reference during development.
 
-## Color Detection
+The actual detection behavior can be affected by:
 
-**Risk:**  
-Lighting, distance and sensor position can influence color readings.
+- Lighting conditions
+- Vehicle speed
+- Sensor orientation
+- Distance between the sensor and the traffic pillar
+- Position of the traffic pillar relative to the vehicle
 
-**Mitigation:**  
-Test the color sensor under different conditions and maintain consistent sensor placement.
-
----
-
-## Vehicle Speed
-
-**Risk:**  
-Excessive speed may cause overshooting during curves and obstacle avoidance.
-
-**Mitigation:**  
-Use different speeds for straight movement and steering maneuvers.
-
----
-
-# 15. Engineering Documentation
-
-Detailed engineering notes are stored in:
-
-[Engineering Journal](documentation/engineering_journal.md)
-
-The journal documents the development process, including modifications, tests and engineering decisions.
-
----
-
-# 16. Engineering Diagrams
-
-Mechanical, sensor and software diagrams are organized in:
-
-[Engineering Diagrams](diagrams/)
-
-This section will include:
-
-- Mechanical steering diagram
-- Robot component layout
-- Sensor and motor connection diagram
-- Software flowchart
-
----
-
-# 17. Robot Photographs
-
-Photographic evidence is available in:
-
-[Robot Photographs](media/photos/)
-
-Current documented views include:
-
-- Front view
-- Right side view
-- Top view
-
-Additional views will be added to complete the photographic documentation.
-
----
-
-# 18. Autonomous Driving Videos
-
-Video evidence will be organized in:
-
-[Autonomous Driving Videos](media/videos/)
-
-The final documentation will include autonomous driving evidence for the developed challenge strategies.
-
----
-
-# 19. Repository Structure
+The current software recognizes:
 
 ```text
-WRO-2026-Future-Engineers-Stars-Double-K/
-│
-├── README.md
-│
-├── code/
-│   └── README.md
-│
-├── documentation/
-│   └── engineering_journal.md
-│
-├── diagrams/
-│   └── README.md
-│
-└── media/
-    ├── photos/
-    │   ├── README.md
-    │   ├── FRONTAL.jpg
-    │   ├── DERECHA.jpg
-    │   └── ARRIBA.jpg
-    │
-    └── videos/
-        └── README.md
+RED detected
+      ↓
+Hub displays "R"
+      ↓
+Execute red maneuver
+
+GREEN detected
+      ↓
+Hub displays "V"
+      ↓
+Execute green maneuver
 ```
 
-This structure separates source code, engineering documentation, diagrams and multimedia evidence.
+The final reliability percentage will be calculated after repeated tests under track conditions.
 
 ---
 
-# 20. How to Run the Robot
+## 13.3 Steering Calibration
 
-Before running the program:
+The steering motor is connected to **Port E**.
 
-1. Turn on the LEGO SPIKE Prime Hub.
-2. Verify all motor and sensor connections.
-3. Confirm the port configuration:
+Before starting a test, the front wheels are positioned in the straight direction and this position is established as the steering reference.
+
+Current reference:
 
 ```text
-A → Traction motor
-E → Steering motor
-B → Distance sensor
-F → Color sensor
+CENTER = 0°
 ```
 
-4. Place the front wheels in the straight position.
-5. Load the appropriate Python program.
-6. Place the robot in the test or starting area.
-7. Start the autonomous program.
-8. Observe the steering and sensor behavior.
+The current experimental steering values are:
 
-Steering calibration must be checked before autonomous navigation tests.
+```text
+Right steering reference: -100°
+Left steering reference:  +100°
+Steering speed:             100 deg/s
+```
+
+These values represent the current software configuration and are still being calibrated.
+
+During development, different steering values were tested.
+
+Initially, the front wheels did not turn enough to produce the desired trajectory. The steering movement was therefore increased.
+
+When the steering movement was increased too much, the front wheels did not correctly return to the center position.
+
+As a result, the vehicle continued moving with the wheels turned and followed an unintended circular trajectory.
+
+This test showed that the steering range must be selected according to the mechanical limits of the steering system and not only according to the motor encoder value.
+
+### Engineering Decision
+
+The steering values will be increased or reduced progressively during testing until the vehicle can:
+
+1. Produce the required turn.
+2. Avoid reaching the mechanical steering limit.
+3. Return the front wheels toward the center.
+4. Continue with a stable trajectory after the maneuver.
 
 ---
 
-# 21. Current Project Status
+## 13.4 Traction Test
 
-## Completed or Tested
+The traction motor is connected to **Port A**.
 
-- Four-wheel vehicle chassis
-- Traction motor control
+The motor has been tested while the steering system is operating.
+
+The current development speed is:
+
+```text
+Normal driving speed: 200 deg/s
+```
+
+This is a development configuration and not necessarily the final competition speed.
+
+The final speed will be selected according to the balance between:
+
+- Vehicle stability
+- Sensor response time
+- Steering accuracy
+- Obstacle avoidance
+- Corner performance
+
+Higher speed can reduce the time available for sensor detection and steering correction, while lower speed provides more control but increases the total driving time.
+
+---
+
+## 13.5 Distance Sensor
+
+The distance sensor is connected to **Port B**.
+
+Its purpose is to provide information about the environment around the vehicle and support autonomous navigation.
+
+The final distance threshold has not yet been established.
+
+```text
+Distance threshold: TBD
+```
+
+The threshold will be determined through track testing instead of selecting a final value without experimental evidence.
+
+Tests will compare different detection distances and analyze their effect on the vehicle trajectory.
+
+---
+
+## 13.6 Current Obstacle Strategy
+
+The current obstacle strategy combines:
+
+- Continuous forward movement
+- Color detection
+- Steering control
+- Steering center recovery
+
+The current control concept is:
+
+```text
+START
+  ↓
+Move forward
+  ↓
+Read sensors
+  ↓
+Traffic color detected?
+  ↓
+ ┌───────────────┐
+ │               │
+RED             GREEN
+ │               │
+ ↓               ↓
+Display R       Display V
+ │               │
+ ↓               ↓
+Red maneuver    Green maneuver
+ │               │
+ └───────┬───────┘
+         ↓
+Recover trajectory
+         ↓
+Continue forward
+```
+
+The complete trajectory recovery maneuver is still under development.
+
+The final strategy will use steering and counter-steering so that the vehicle does not only avoid the obstacle but also returns toward its intended driving trajectory.
+
+---
+
+## 13.7 Preliminary Engineering Targets
+
+The following values represent engineering objectives for the final testing stage.
+
+They are **targets and not measured success rates**.
+
+| Engineering Objective | Target |
+|---|---|
+| Red pillar detection | Detect during autonomous movement |
+| Green pillar detection | Detect during autonomous movement |
+| Color working distance | Approx. 6 cm |
+| Steering recovery | Return wheels close to straight |
+| Straight movement | Maintain stable trajectory |
+| Obstacle avoidance | Pass pillar without contact |
+| Trajectory recovery | Return toward intended path |
+| Corner navigation | Complete curve without leaving track |
+| Autonomous operation | Operate without external control |
+
+---
+
+## 13.8 Final Validation Plan
+
+The following parameters will be measured during the final testing stage:
+
+| Test | Attempt 1 | Attempt 2 | Attempt 3 | Attempt 4 | Attempt 5 | Success Rate |
+|---|---|---|---|---|---|---|
+| Red detection | TBD | TBD | TBD | TBD | TBD | TBD |
+| Green detection | TBD | TBD | TBD | TBD | TBD | TBD |
+| Steering returns to center | TBD | TBD | TBD | TBD | TBD | TBD |
+| Right obstacle maneuver | TBD | TBD | TBD | TBD | TBD | TBD |
+| Left obstacle maneuver | TBD | TBD | TBD | TBD | TBD | TBD |
+| Corner navigation | TBD | TBD | TBD | TBD | TBD | TBD |
+| Trajectory recovery | TBD | TBD | TBD | TBD | TBD | TBD |
+
+The success rate will be calculated using:
+
+```text
+Success Rate = Successful Attempts / Total Attempts × 100
+```
+
+For example, if four of five future attempts are successful:
+
+```text
+4 / 5 × 100 = 80%
+```
+
+This is only an example of the calculation method and is not a current measured result.
+
+---
+
+## 13.9 Parameters Pending Final Calibration
+
+The following values will be updated after additional testing:
+
+```text
+Final right steering value:      TBD
+Final left steering value:       TBD
+Final steering center:           TBD
+Final traction speed:            TBD
+Final curve speed:               TBD
+Final distance threshold:        TBD
+Red maneuver timing:             TBD
+Green maneuver timing:           TBD
+Counter-steering timing:         TBD
+```
+
+Keeping these parameters marked as TBD allows the repository to distinguish between the current development configuration and experimentally validated competition values.
+
+---
+
+## 13.10 Current Development Status
+
+### Confirmed / Tested
+
+- Traction motor connected to Port A
+- Steering motor connected to Port E
+- Distance sensor connected to Port B
+- Color sensor connected to Port F
+- Vehicle forward movement
 - Mechanical front steering
-- Forward movement
-- Steering movement
-- Steering center testing
-- Red color detection
-- Green color detection
-- Hub visual feedback
+- Steering center reference
+- Red color recognition
+- Green color recognition
+- Approximate 6 cm color detection distance
+- Hub visual feedback for detected colors
 - Color detection while the vehicle is moving
 
-## Currently Under Development
+### Currently Under Calibration
 
-- Final steering calibration
-- Distance-based navigation
-- Complete red obstacle maneuver
-- Complete green obstacle maneuver
+- Final right steering angle
+- Final left steering angle
+- Steering center recovery
+- Distance sensor threshold
+- Obstacle avoidance trajectory
 - Counter-steering
 - Trajectory recovery
 - Corner navigation
-- Full autonomous challenge strategy
-- Final reliability testing
+- Final driving speed
+- Complete autonomous navigation
 
-The status of these functions will be updated as testing continues.
-
----
-
-# 22. Reproducibility
-
-This repository is intended to provide enough information to understand how the robot was developed.
-
-The documentation includes:
-
-- Hardware configuration
-- Motor and sensor ports
-- Mechanical design explanation
-- Steering calibration process
-- Source code
-- Sensor strategy
-- Test results
-- Failure analysis
-- Engineering decisions
-- Photographs
-- Diagrams
-- Video evidence
-
-Our goal is to document not only the final vehicle but the complete engineering process behind it.
-
----
-
-# 23. Conclusion
-
-Stars Double K is developing an autonomous vehicle for the WRO 2026 Future Engineers challenge using LEGO Education SPIKE Prime.
-
-The project combines mechanical design, sensors, programming and repeated experimental testing.
-
-One of the most important lessons during development has been the relationship between software commands and real mechanical behavior. A motor value that appears correct in software does not necessarily produce the expected wheel angle or vehicle trajectory.
-
-For this reason, our development process is based on testing, observation, measurement and progressive improvement.
-
-Every test contributes information to the next version of the robot.
-
-The repository will continue to be updated as the autonomous navigation system is improved and the final competition strategy is completed.
-
----
-
-## Stars Double K
-
-**WRO 2026 – Future Engineers**  
-**Mexico**
+The repository will be updated as additional measurements and track tests are completed.
