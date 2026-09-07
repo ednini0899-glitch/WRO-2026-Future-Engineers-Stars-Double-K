@@ -1,3 +1,8 @@
+<p align="center">
+  <img src="media/branding/stars_double_k_logo.png" width="650" alt="Stars Double K - WRO 2026 Future Engineers">
+</p>
+
+# WRO 2026 Future Engineers – Stars Double K
 # WRO 2026 Future Engineers – Stars Double K
 
 ## Autonomous Vehicle Engineering Documentation
