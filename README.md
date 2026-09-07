@@ -3,7 +3,6 @@
 </p>
 
 # WRO 2026 Future Engineers – Stars Double K
-# WRO 2026 Future Engineers – Stars Double K
 
 ## Autonomous Vehicle Engineering Documentation
 
